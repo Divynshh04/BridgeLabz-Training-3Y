@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Form Validator</title>
+    <style>
+        input {
+            display: block;
+            margin: 8px 0;
+            padding: 8px;
+            border: 2px solid gray;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h2>Student Registration</h2>
+
+    <form id="studentForm">
+        <input id="name" placeholder="Name">
+        <input id="email" placeholder="Email">
+        <input id="phone" placeholder="Phone">
+        <input id="password" type="password" placeholder="Password">
+        <button type="submit">Register</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+        const form = document.getElementById("studentForm");
+        const message = document.getElementById("message");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const fields = [
+                {
+                    input: document.getElementById("name"),
+                    regex: /^[A-Za-z]+$/,
+                    error: "Name must contain alphabets only."
+                },
+                {
+                    input: document.getElementById("email"),
+                    regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    error: "Enter a valid email."
+                },
+                {
+                    input: document.getElementById("phone"),
+                    regex: /^\d{10}$/,
+                    error: "Phone must contain exactly 10 digits."
+                },
+                {
+                    input: document.getElementById("password"),
+                    regex: /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/,
+                    error: "Password needs uppercase, number and special character."
+                }
+            ];
+
+            let allValid = true;
+            let errors = [];
+
+            fields.forEach(field => {
+                if (field.regex.test(field.input.value)) {
+                    field.input.style.borderColor = "green";
+                } else {
+                    field.input.style.borderColor = "red";
+                    errors.push(field.error);
+                    allValid = false;
+                }
+            });
+
+            message.className = allValid ? "success" : "error";
+            message.textContent = allValid
+                ? "Registration successful!"
+                : errors.join(" ");
+        });
+    </script>
+</body>
+</html>
