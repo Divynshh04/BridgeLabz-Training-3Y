@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Custom Dropdown</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        #options {
+            display: none;
+            width: 150px;
+            border: 1px solid gray;
+        }
+        #options div {
+            padding: 10px;
+            cursor: pointer;
+        }
+        #options div:hover { background: lightgray; }
+    </style>
+</head>
+<body>
+    <h2>Custom Dropdown</h2>
+
+    <div id="dropdown">
+        <button id="dropdownButton">Select a fruit</button>
+        <div id="options">
+            <div>Apple</div>
+            <div>Banana</div>
+            <div>Mango</div>
+            <div>Orange</div>
+        </div>
+    </div>
+
+    <script>
+        const dropdown = document.getElementById("dropdown");
+        const dropdownButton = document.getElementById("dropdownButton");
+        const options = document.getElementById("options");
+
+        dropdownButton.addEventListener("click", function (event) {
+            event.stopPropagation();
+
+            options.style.display =
+                options.style.display === "block" ? "none" : "block";
+        });
+
+        options.addEventListener("click", function (event) {
+            if (event.target.tagName === "DIV") {
+                dropdownButton.textContent = event.target.textContent;
+                options.style.display = "none";
+            }
+        });
+
+        document.addEventListener("click", function () {
+            options.style.display = "none";
+        }, true);
+    </script>
+</body>
+</html>

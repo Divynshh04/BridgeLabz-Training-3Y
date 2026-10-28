@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Manager</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        li { margin: 10px 0; }
+        button { margin-left: 8px; }
+    </style>
+</head>
+<body>
+    <h2>Product List Manager</h2>
+    <input id="productInput" placeholder="Enter product name">
+    <button id="addButton">Add Product</button>
+    <ul id="productList"></ul>
+
+    <script>
+        const productInput = document.getElementById("productInput");
+        const productList = document.getElementById("productList");
+        const addButton = document.getElementById("addButton");
+
+        addButton.addEventListener("click", function () {
+            const productName = productInput.value.trim();
+
+            if (productName === "") return;
+
+            const listItem = document.createElement("li");
+            const nameSpan = document.createElement("span");
+            const editButton = document.createElement("button");
+            const deleteButton = document.createElement("button");
+
+            nameSpan.textContent = productName;
+            editButton.textContent = "Edit";
+            deleteButton.textContent = "Delete";
+
+            listItem.append(nameSpan, editButton, deleteButton);
+            productList.appendChild(listItem);
+            productInput.value = "";
+        });
+
+        productList.addEventListener("click", function (event) {
+            const listItem = event.target.closest("li");
+
+            if (!listItem) return;
+
+            if (event.target.textContent === "Delete") {
+                listItem.remove();
+            }
+
+            if (event.target.textContent === "Edit") {
+                const nameSpan = listItem.querySelector("span");
+
+                if (listItem.querySelector("input")) return;
+
+                const editInput = document.createElement("input");
+                editInput.value = nameSpan.textContent;
+                nameSpan.replaceWith(editInput);
+                editInput.focus();
+
+                function saveEdit() {
+                    const updatedName = document.createElement("span");
+                    updatedName.textContent = editInput.value.trim() || nameSpan.textContent;
+                    editInput.replaceWith(updatedName);
+                }
+
+                editInput.addEventListener("blur", saveEdit, { once: true });
+
+                editInput.addEventListener("keydown", function (keyEvent) {
+                    if (keyEvent.key === "Enter") editInput.blur();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

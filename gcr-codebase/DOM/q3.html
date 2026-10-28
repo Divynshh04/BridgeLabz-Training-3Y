@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multi-Step Form</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .step { display: none; }
+        .step.active { display: block; }
+        input { display: block; margin: 10px 0; padding: 8px; }
+    </style>
+</head>
+<body>
+    <h2>Registration Form</h2>
+
+    <div id="step1" class="step active">
+        <h3>Step 1: Name</h3>
+        <input id="name" placeholder="Enter name">
+    </div>
+
+    <div id="step2" class="step">
+        <h3>Step 2: Email</h3>
+        <input id="email" type="email" placeholder="Enter email">
+    </div>
+
+    <div id="step3" class="step">
+        <h3>Step 3: Password</h3>
+        <input id="password" type="password" placeholder="Enter password">
+    </div>
+
+    <button id="backButton">Back</button>
+    <button id="nextButton">Next</button>
+    <p id="error" style="color:red"></p>
+    <div id="summary"></div>
+
+    <script>
+        let currentStep = 1;
+
+        const steps = document.querySelectorAll(".step");
+        const backButton = document.getElementById("backButton");
+        const nextButton = document.getElementById("nextButton");
+        const error = document.getElementById("error");
+        const summary = document.getElementById("summary");
+
+        function showStep() {
+            steps.forEach((step, index) => {
+                step.classList.toggle("active", index + 1 === currentStep);
+            });
+
+            backButton.style.display = currentStep === 1 ? "none" : "inline";
+            nextButton.textContent = currentStep === 3 ? "Submit" : "Next";
+            error.textContent = "";
+        }
+
+        nextButton.addEventListener("click", function () {
+            const input = document.querySelector("#step" + currentStep + " input");
+
+            if (!input.value.trim() ||
+                (currentStep === 2 && !input.checkValidity()) ||
+                (currentStep === 3 && input.value.length < 6)) {
+                error.textContent = currentStep === 3
+                    ? "Password must contain at least 6 characters."
+                    : "Please enter valid information.";
+                return;
+            }
+
+            if (currentStep < 3) {
+                currentStep++;
+                showStep();
+            } else {
+                steps.forEach(step => step.style.display = "none");
+                backButton.style.display = "none";
+                nextButton.style.display = "none";
+
+                summary.innerHTML = `
+                    <h3>Form Completed!</h3>
+                    <p>Name: ${document.getElementById("name").value}</p>
+                    <p>Email: ${document.getElementById("email").value}</p>
+                    <p>Password: ${"*".repeat(document.getElementById("password").value.length)}</p>
+                `;
+            }
+        });
+
+        backButton.addEventListener("click", function () {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep();
+            }
+        });
+
+        showStep();
+    </script>
+</body>
+</html>
